@@ -44,7 +44,11 @@ kotlin {
         }
         val jvmMain by getting
         val jvmTest by getting
-        val jsMain by getting
+        val jsMain by getting {
+            dependencies {
+                implementation(npm("node-forge", "1.3.1"))
+            }
+        }
         val jsTest by getting
         val nativeMain by getting
         val nativeTest by getting
