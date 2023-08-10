@@ -7,18 +7,18 @@ class RSA_Test {
     @Test
     fun test() {
         // 生成密钥对
-        val keyPair = generateRSAKeyPair(KeyFormat.PKCS1)
+        val keyPair = generateRSAKeyPair(KeyFormat.PKCS1, 1024)
         println("Public Key: \n${keyPair.first}")
         println("Private Key: \n${keyPair.second}")
 
-        val pkcs8KeyPair = generateRSAKeyPair(KeyFormat.PKCS8)
+        val pkcs8KeyPair = generateRSAKeyPair(KeyFormat.PKCS8, 1024)
         println("Public Key (PKCS8): \n${pkcs8KeyPair.first}")
         println("Private Key (PKCS8): \n${pkcs8KeyPair.second}")
 
-//        // 测试公钥加密
-//        val content = "1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv"
-//        val encryptContent = rsaPublicEncrypt(content, pkcs8KeyPair.first, RSAEncryptMode.ECB, RSAFillMode.OAEP)
-//        println("Encrypt Content: $encryptContent")
+        // 测试公钥加密
+        val content = "11azwsx"
+        val encryptContent = rsaPublicEncrypt(content, pkcs8KeyPair.first, RSAEncryptMode.ECB, RSAFillMode.OAEP, HashAlgorithm.SHA256, MGFHashAlgorithm.SHA1)
+        println("Encrypt Content: $encryptContent")
 //
 //        // 测试私钥解密
 //        val decryptContent = rsaPrivateDecrypt(encryptContent, pkcs8KeyPair.second, RSAEncryptMode.ECB, RSAFillMode.OAEP)

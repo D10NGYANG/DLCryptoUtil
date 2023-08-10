@@ -51,7 +51,34 @@ actual fun rsaPublicEncrypt(
     hashAlgorithm: HashAlgorithm?,
     mgfHashAlgorithm: MGFHashAlgorithm?
 ): String {
-    TODO("Not yet implemented")
+    // 对公钥进行补全
+    val publicKeyFull = "-----BEGIN PUBLIC KEY-----\n${publicKey}\n-----END PUBLIC KEY-----"
+    val publicKeyParse = NodeForge.pki.publicKeyFromPem(publicKeyFull)
+    val fillModeStr = when(fillMode) {
+        RSAFillMode.PKCS1Padding -> "RSAES-PKCS1-V1_5"
+        RSAFillMode.OAEP -> "RSA-OAEP"
+        RSAFillMode.NoPadding -> "RSAES-PKCS1-V1_5"
+    }
+    val option = when(fillMode) {
+        RSAFillMode.PKCS1Padding -> null
+        RSAFillMode.OAEP -> {
+            val hashAlgorithmMd = when(hashAlgorithm) {
+                HashAlgorithm.SHA1 -> NodeForge.md.sha1.create()
+                HashAlgorithm.SHA256 -> NodeForge.md.sha256.create()
+                HashAlgorithm.SHA512 -> NodeForge.md.sha512.create()
+                else -> null
+            }
+            val mgfHashAlgorithmMd = when(mgfHashAlgorithm) {
+                MGFHashAlgorithm.SHA1 -> NodeForge.md.sha1.create()
+                else -> null
+            }
+            js("{md: hashAlgorithmMd, mgf1: { md: mgfHashAlgorithmMd }}")
+        }
+        RSAFillMode.NoPadding -> null
+    }
+    val blockSize = getBlockSize(publicKey, true, true, fillMode)
+    val encrypted = doLongFinal(data, blockSize) { str -> publicKeyParse.encrypt(str, fillModeStr, option) }
+    return NodeForge.util.encode64(encrypted)
 }
 
 /**
@@ -121,4 +148,46 @@ actual fun rsaPublicDecrypt(
     mgfHashAlgorithm: MGFHashAlgorithm?
 ): String {
     TODO("Not yet implemented")
+}
+
+/**
+ * 获取分包大小
+ * @param key String
+ * @param isPublicKey Boolean
+ * @param isEncrypt Boolean
+ * @param fillMode RSAFillMode
+ * @return Int
+ */
+private fun getBlockSize(key: String, isPublicKey: Boolean, isEncrypt: Boolean, fillMode: RSAFillMode): Int {
+    var keepSize = when (fillMode) {
+        RSAFillMode.PKCS1Padding -> 11
+        RSAFillMode.OAEP -> 66
+        else -> 0
+    }
+    if (!isEncrypt) {
+        keepSize = 0
+    }
+    val keyBytes = NodeForge.util.decode64(key)
+    val keyDer = NodeForge.asn1.fromDer(keyBytes)
+    val bitLength =  if (isPublicKey) {
+        NodeForge.pki.publicKeyFromAsn1(keyDer).n.bitLength()
+    } else {
+        NodeForge.pki.privateKeyFromAsn1(keyDer).n.bitLength()
+    }
+    return (bitLength + 7) / 8 - keepSize
+}
+
+private fun doLongFinal(data: String, blockSize: Int, handle: (String) -> String): String {
+    var offset = 0
+    val blocks = mutableListOf<String>()
+    val bs = blockSize
+
+    while (offset < data.length) {
+        val blockEnd = minOf(offset + bs, data.length)
+        val part = data.substring(offset, blockEnd)
+        val block = handle(data.substring(offset, blockEnd))
+        blocks.add(block)
+        offset += bs
+    }
+    return blocks.joinToString("")
 }

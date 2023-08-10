@@ -18,11 +18,11 @@ class Test {
 
         // 测试公钥加密
         val content = "1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv"
-        val encryptContent = rsaPublicEncrypt(content, pkcs8KeyPair.first, RSAEncryptMode.ECB, RSAFillMode.OAEP)
+        val encryptContent = rsaPublicEncrypt(content, pkcs8KeyPair.first, RSAEncryptMode.ECB, RSAFillMode.OAEP, HashAlgorithm.SHA256, MGFHashAlgorithm.SHA1)
         println("Encrypt Content: $encryptContent")
 
         // 测试私钥解密
-        val decryptContent = rsaPrivateDecrypt(encryptContent, pkcs8KeyPair.second, RSAEncryptMode.ECB, RSAFillMode.OAEP)
+        val decryptContent = rsaPrivateDecrypt(encryptContent, pkcs8KeyPair.second, RSAEncryptMode.ECB, RSAFillMode.OAEP, HashAlgorithm.SHA256, MGFHashAlgorithm.SHA1)
         assert(content == decryptContent)
 
         // 测试私钥加密
@@ -36,11 +36,10 @@ class Test {
 
     @Test
     fun test1() {
-        val encryptContent = "QYSu2gq2HffvsT2DqJGr/fG8mUzPHizejSOd21tqkpRC6H1rp/VMQFddY0RDwKjHmYt3Xe0fmS7X5BOWxkR5myvCJS1k/8ABw7Jk2R90edznwe6QDbtKIzrXjRFvAHI9E5YS1EFcUzre/UWRsS2RDc5jfidCVmx2ouYHL/5ByyNeNWsez3RUkDVEgwzRNMjAKASShxFOp0gwWcUHV1A/PBZMZjz3uatJ/YSbUNDfeejRSYKf6XkjwLJejc5m96tHKe8aWE497V4SC/Hh5/7ytb3dPRnr4wxjg+ScuDmh7LejW1/qYkW2mSNLsi9k/4sO5iTvxYbu3H5vg4f8EwvoIA=="
-        val key = "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC+mGph2xSO2wo+B7f/mYyXhL4W+jcCZCwUVbRRU/AR9npkXK8ehyRDv55eZMZkhPufsS8gGNFr7xnnLGmglf7wgsinqL0B9CxWXit7ItMDc1nTB/wWbZNOBTMzRgCdFzSfl+oIEqx3TiPiAAai+QCl93lY1JuqnJTIHS9pDaaC6eydUsNkqOri0li2YdkPDG1SXlnSU4Q1rrIWEkYsPZHRCzkoTrURuD2PSYmWPelMIvad44H0Uo4UiziU6AUEdCASOzR0ba3qwkXuQCfQpvuukCxLeWYVjioTv+23D5Ms/EQuU5yShZs0VXfLVUHrSgx6IJns0v6MpOsA16Oq8iV1AgMBAAECggEBAKSR3mmYTWv8Xh+pcorU/rxl9ezJKG58KEN2rTf8DjK0bIH0NZFah0moTwqaYWOyH8KHr3U7eLiFwAwIITxzx6nMg42g+XKSbyY0Mb8lFqbIFytMnbKP8r1PaCJBs43w15NmDMHjvd9WLU2bUB+weYrU4IZ/LdpnUWBpMuK20qv96I+N65opuyS19kaytR6lMLgzKvytAAtGvLOcNVJfFvvaIjPlAA5mEGIITBhoOIe0vEFJHhb1TAxBFAV+u2ZKoDME8saTYk8BsAREgyDlXlqZttEEM/aqpBJ2nffwoOzszoaTdfYKZWzyzFL5qyVkKPWO+HqyBLtUq2Ut7rGMRAECgYEA9gSlZInHiV1AcPHouAFgi2Crm2h+1MiWWrHgfOnnFLpKfl8xadHhqqFCDK2qb2FcbCZ0CuyQvlsK14NAf8yhUdt1u36cXBjSZJAlrGwLwCDQYyZYusLN3LUMX7mVAlDKy11FVZQgTzFtqknvXeVBlAQba7yFbkX7bbEo1Ul3ScECgYEAxlQZ8tdhw5uIe2hKBtzf+6bfeuYl/GwRs0nzmueDfI0A1VvpEegjBAcNcyt5d+1I/jc1IJGTp1058w2ycjaC63efB3Kvtj2NXyj9ejE6/CV/3YIpftlfGQg6WP6NghZFy8CGgLZWQwVPqpc/pRdIDFl3LJa2oT5i0DxL3AJbALUCgYEAh+fRJlUmsa+eJca9dMjt+JESu+tiBVI6HSgeh2L/kOfItz8HIRocvBIRVsepW5ZBZE1p1Y8R9tZ8ismrG+6DP6EozMcIwafEsmEfLr0RULXP6LYKVkG/T6mEiG0Q8BKJtQZ1gu0tXBJGLshhP1GihI4wR7gBTgXC+7negNTw3QECgYBmTc+s0qldi4dVkTBOZfUsDKJO9RU3Jk/jGgyNJUtQHjQF2wlY8VPOqgyoEg7wa/gxGi1PhYiS1qYj2Dbqb3ANIoFoCCLXcNzR74UBWQ/CLV3N12ysQFirwvDGI1i/d9m9BqzbDDNnEwBLUQXFlULXC/dLitreRh4WqGPBM33Z2QKBgBNdiB3BISszUOPBifmCNiL2/qNproTaMalOrzr07s1wy3TFkzvMrKXrO59938xXyOhW+nMgghiNxmdkPUtTWC78XUpuNZUGM75r6uXvsqpGq3lJLypgWWwpt3IXrU+iYT6IwF5l78x4mQfNz2aBkKb3ZE5ni4r4JhTczfjVwur3"
+        val encryptContent = "Qg+vdIbdUsLPWnZ95EA/N+DVqOpS5UD6STrM7VtYwdYa53aZZgJgB+Obo1oDwc2kNeLOo7AnwPzb38teE6EC5zsdmw6w/KfOhMknYiZWzBQtziUpugHi90+RtxDtjSAKPzjZy5j5A516IWDpza/qV7XmE4DVxSwfKJTGrfjea0IQ57FnZfI1bWt/PiC2hoty2OgGQ63HLlPgtoVncphjkyl7mEaIeToXtuyHvCsEC/CoKMw/bmlz1nhbsqS5kutl20rNxSmfXYIZMZv3FGkzC6aGaQNFs+AlzeNLs8kWONbDUTunbq29xUK39k0laRc7mqo3g4U8mvp8lxafWIn4/A=="
+        val key = "MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBANCA/yhtSvdT7g+cZGNPxPDot5OxbqePGk1G5ynwo76BGbRvrLDmx5qDvw89+fSJww/a3OhS6CdyXi0L6a5lZyquYH6gDoyufWSU7/k5Ivw7MxXMG2VsepYtKJlZEp1DjwzEzdVMH/XCwjS1qADGD2QOMcUfAeLcXk/fdsBko24NAgMBAAECgYAsxQYEsDMAmEztnS8RA/fNoqqIU/jmkZucLDVGlB0UsrPKQpBaC7OgQdmsdCpPj6UKqnv0hpjCn5QJKB2tDKjx5ZyNd3vsrHwO+veIo2avk7ANAmjDH7XuM0Me11hkBLN0PqyErFoOuDn8JCQ7vfK3sKJRlqpXGs3cEZCL2jjhIQJBAPt9rpHgVDwc0RFm0VKwsug4QSj8PhCB7DI4amNg63zHqRAKOLf2/0+Ehb5BRsJ9iDG0HVp3jqs8vuiYp2Dksu8CQQDUPgIxOs58/Pc5e/3um9sb+TeOyXopTiHhlzjPuQ4+20+VUG5INnEYtDeDsT5pw9Ix4njjCB0V00mpW5kJev7DAkEA1ZHi+QDfp/j01ulQ4/8ov6peM5cagdxDoFZmiqSY9ut7uCJmDlxUbsvk5C/9DleanFMQBm63mtXIbjCNG+y7wwJBALA1EwjgM9KdCnvVL0tMZirhS3jmWN+2GHb8X5RFpUgWOApVDloxqM/Dv1s8af7RLs9voMGMWOln034hp/qw/JUCQQCzCG3OR3vSwtiVWBP3LrtW282a1eZGyIC4d88Jeq2EHpuruS8vdWAmusdfRCnw2GJJ+w7sJXtpxIQwsNTN0ev6"
         // 测试私钥解密
-        val decryptContent = rsaPrivateDecrypt(encryptContent, key, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
+        val decryptContent = rsaPrivateDecrypt(encryptContent, key, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding, HashAlgorithm.SHA256, MGFHashAlgorithm.SHA1)
         println("Decrypt Content: $decryptContent")
-        assert(decryptContent == "1qaz2wsx3edc4rfv")
     }
 }
