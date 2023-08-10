@@ -19,10 +19,10 @@ class RSA_Test {
         val content = "11azwsx"
         val encryptContent = rsaPublicEncrypt(content, pkcs8KeyPair.first, RSAEncryptMode.ECB, RSAFillMode.OAEP, HashAlgorithm.SHA256, MGFHashAlgorithm.SHA1)
         println("Encrypt Content: $encryptContent")
-//
-//        // 测试私钥解密
-//        val decryptContent = rsaPrivateDecrypt(encryptContent, pkcs8KeyPair.second, RSAEncryptMode.ECB, RSAFillMode.OAEP)
-//        assertEquals(content, decryptContent)
+
+        // 测试私钥解密
+        val decryptContent = rsaPrivateDecrypt(encryptContent, pkcs8KeyPair.second, RSAEncryptMode.ECB, RSAFillMode.OAEP, HashAlgorithm.SHA256, MGFHashAlgorithm.SHA1)
+        assertEquals(content, decryptContent)
 //
 //        // 测试私钥加密
 //        val encryptContent2 = rsaPrivateEncrypt(content, pkcs8KeyPair.second, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)

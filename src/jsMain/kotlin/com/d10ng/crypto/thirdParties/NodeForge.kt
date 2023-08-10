@@ -22,6 +22,7 @@ external object NodeForge {
         fun privateKeyInfoToPem(privateKey: asn1.Asn1): String
         fun wrapRsaPrivateKey(privateKey: asn1.Asn1): asn1.Asn1
         fun publicKeyFromPem(pem: String): rsa.PublicKey
+        fun privateKeyFromPem(pem: String): rsa.PrivateKey
         fun publicKeyFromAsn1(publicKey: asn1.Asn1): rsa.PublicKey
         fun privateKeyFromAsn1(privateKey: asn1.Asn1): rsa.PrivateKey
 
@@ -36,7 +37,7 @@ external object NodeForge {
             class PrivateKey {
                 var n: jsbn.BigInteger
                 var e: jsbn.BigInteger
-                fun decrypt(bytes: ByteArray): ByteArray
+                fun decrypt(data: String, scheme: String?, schemeOptions: Any?): String
             }
 
             class KeyPair {

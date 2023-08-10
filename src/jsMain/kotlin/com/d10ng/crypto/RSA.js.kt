@@ -103,7 +103,33 @@ actual fun rsaPrivateDecrypt(
     hashAlgorithm: HashAlgorithm?,
     mgfHashAlgorithm: MGFHashAlgorithm?
 ): String {
-    TODO("Not yet implemented")
+    // 对私钥进行补全
+    val privateKeyFull = "-----BEGIN RSA PRIVATE KEY-----\n${privateKey}\n-----END RSA PRIVATE KEY-----"
+    val privateKeyParse = NodeForge.pki.privateKeyFromPem(privateKeyFull)
+    val fillModeStr = when(fillMode) {
+        RSAFillMode.PKCS1Padding -> "RSAES-PKCS1-V1_5"
+        RSAFillMode.OAEP -> "RSA-OAEP"
+        RSAFillMode.NoPadding -> "RSAES-PKCS1-V1_5"
+    }
+    val option = when(fillMode) {
+        RSAFillMode.PKCS1Padding -> null
+        RSAFillMode.OAEP -> {
+            val hashAlgorithmMd = when(hashAlgorithm) {
+                HashAlgorithm.SHA1 -> NodeForge.md.sha1.create()
+                HashAlgorithm.SHA256 -> NodeForge.md.sha256.create()
+                HashAlgorithm.SHA512 -> NodeForge.md.sha512.create()
+                else -> null
+            }
+            val mgfHashAlgorithmMd = when(mgfHashAlgorithm) {
+                MGFHashAlgorithm.SHA1 -> NodeForge.md.sha1.create()
+                else -> null
+            }
+            js("{md: hashAlgorithmMd, mgf1: { md: mgfHashAlgorithmMd }}")
+        }
+        RSAFillMode.NoPadding -> null
+    }
+    val blockSize = getBlockSize(privateKey, false, false, fillMode)
+    return doLongFinal(NodeForge.util.decode64(data), blockSize) { str -> privateKeyParse.decrypt(str, fillModeStr, option) }
 }
 
 /**
@@ -180,14 +206,13 @@ private fun getBlockSize(key: String, isPublicKey: Boolean, isEncrypt: Boolean, 
 private fun doLongFinal(data: String, blockSize: Int, handle: (String) -> String): String {
     var offset = 0
     val blocks = mutableListOf<String>()
-    val bs = blockSize
 
     while (offset < data.length) {
-        val blockEnd = minOf(offset + bs, data.length)
+        val blockEnd = minOf(offset + blockSize, data.length)
         val part = data.substring(offset, blockEnd)
-        val block = handle(data.substring(offset, blockEnd))
+        val block = handle(part)
         blocks.add(block)
-        offset += bs
+        offset += blockSize
     }
     return blocks.joinToString("")
 }
