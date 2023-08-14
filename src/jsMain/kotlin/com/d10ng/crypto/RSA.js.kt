@@ -65,7 +65,6 @@ actual fun rsaPublicEncrypt(
             val hashAlgorithmMd = when(hashAlgorithm) {
                 HashAlgorithm.SHA1 -> NodeForge.md.sha1.create()
                 HashAlgorithm.SHA256 -> NodeForge.md.sha256.create()
-                HashAlgorithm.SHA512 -> NodeForge.md.sha512.create()
                 else -> null
             }
             val mgfHashAlgorithmMd = when(mgfHashAlgorithm) {
@@ -76,8 +75,10 @@ actual fun rsaPublicEncrypt(
         }
         RSAFillMode.NoPadding -> null
     }
+    val buffer = NodeForge.util.createBuffer()
+    buffer.data = NodeForge.util.encodeUtf8(data)
     val blockSize = getBlockSize(publicKey, true, true, fillMode)
-    val encrypted = doLongFinal(data, blockSize) { str -> publicKeyParse.encrypt(str, fillModeStr, option) }
+    val encrypted = doLongFinal(buffer.bytes(), blockSize) { str -> publicKeyParse.encrypt(str, fillModeStr, option) }
     return NodeForge.util.encode64(encrypted)
 }
 
@@ -117,7 +118,6 @@ actual fun rsaPrivateDecrypt(
             val hashAlgorithmMd = when(hashAlgorithm) {
                 HashAlgorithm.SHA1 -> NodeForge.md.sha1.create()
                 HashAlgorithm.SHA256 -> NodeForge.md.sha256.create()
-                HashAlgorithm.SHA512 -> NodeForge.md.sha512.create()
                 else -> null
             }
             val mgfHashAlgorithmMd = when(mgfHashAlgorithm) {
@@ -129,7 +129,7 @@ actual fun rsaPrivateDecrypt(
         RSAFillMode.NoPadding -> null
     }
     val blockSize = getBlockSize(privateKey, false, false, fillMode)
-    return doLongFinal(NodeForge.util.decode64(data), blockSize) { str -> privateKeyParse.decrypt(str, fillModeStr, option) }
+    return NodeForge.util.decodeUtf8(doLongFinal(NodeForge.util.decode64(data), blockSize) { str -> privateKeyParse.decrypt(str, fillModeStr, option) })
 }
 
 /**
@@ -203,6 +203,13 @@ private fun getBlockSize(key: String, isPublicKey: Boolean, isEncrypt: Boolean, 
     return (bitLength + 7) / 8 - keepSize
 }
 
+/**
+ * 分包处理加密解密
+ * @param data String
+ * @param blockSize Int
+ * @param handle Function1<String, String>
+ * @return String
+ */
 private fun doLongFinal(data: String, blockSize: Int, handle: (String) -> String): String {
     var offset = 0
     val blocks = mutableListOf<String>()

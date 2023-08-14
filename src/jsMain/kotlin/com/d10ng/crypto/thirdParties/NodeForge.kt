@@ -68,5 +68,16 @@ external object NodeForge {
     object util {
         fun encode64(bytes: String): String
         fun decode64(encoded: String): String
+
+        class ByteBuffer: ByteStringBuffer
+
+        open class ByteStringBuffer {
+            var data: String
+            fun bytes(): String
+        }
+
+        fun createBuffer(): ByteBuffer
+        fun encodeUtf8(str: String): String
+        fun decodeUtf8(encoded: String): String
     }
 }

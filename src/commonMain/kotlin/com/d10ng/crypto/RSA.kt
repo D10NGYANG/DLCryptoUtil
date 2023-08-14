@@ -16,7 +16,7 @@ enum class RSAEncryptMode {
 }
 // 哈希算法
 enum class HashAlgorithm(val text: String) {
-    SHA1("SHA-1"), SHA256("SHA-256"), SHA512("SHA-512")
+    SHA1("SHA-1"), SHA256("SHA-256")
 }
 // MGF哈希算法
 enum class MGFHashAlgorithm(val text: String) {

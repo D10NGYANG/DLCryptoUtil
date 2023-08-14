@@ -2,6 +2,12 @@ package com.d10ng.crypto.test
 
 import com.d10ng.crypto.*
 import org.junit.Test
+import java.security.KeyFactory
+import java.security.spec.PKCS8EncodedKeySpec
+import java.security.spec.RSAPrivateCrtKeySpec
+import kotlin.io.encoding.Base64.Default.decode
+import kotlin.io.encoding.ExperimentalEncodingApi
+
 
 class Test {
 
@@ -18,19 +24,19 @@ class Test {
 
         // 测试公钥加密
         val content = "1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv"
-        val encryptContent = rsaPublicEncrypt(content, pkcs8KeyPair.first, RSAEncryptMode.ECB, RSAFillMode.OAEP, HashAlgorithm.SHA256, MGFHashAlgorithm.SHA1)
+        val encryptContent = rsaPublicEncrypt(content, keyPair.first, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
         println("Encrypt Content: $encryptContent")
 
         // 测试私钥解密
-        val decryptContent = rsaPrivateDecrypt(encryptContent, pkcs8KeyPair.second, RSAEncryptMode.ECB, RSAFillMode.OAEP, HashAlgorithm.SHA256, MGFHashAlgorithm.SHA1)
+        val decryptContent = rsaPrivateDecrypt(encryptContent, keyPair.second, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
         assert(content == decryptContent)
 
         // 测试私钥加密
-        val encryptContent2 = rsaPrivateEncrypt(content, pkcs8KeyPair.second, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
+        val encryptContent2 = rsaPrivateEncrypt(content, keyPair.second, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
         println("Encrypt Content: $encryptContent2")
 
         // 测试公钥解密
-        val decryptContent2 = rsaPublicDecrypt(encryptContent2, pkcs8KeyPair.first, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
+        val decryptContent2 = rsaPublicDecrypt(encryptContent2, keyPair.first, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
         assert(content == decryptContent2)
     }
 
