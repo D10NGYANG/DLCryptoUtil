@@ -3,6 +3,14 @@ package com.d10ng.crypto
 import java.security.Key
 import java.security.KeyFactory
 import java.security.KeyPairGenerator
+import java.security.PrivateKey
+import org.bouncycastle.asn1.pkcs.RSAPrivateKey
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
+import org.bouncycastle.crypto.params.RSAKeyParameters
+import org.bouncycastle.crypto.util.PublicKeyFactory
+import org.bouncycastle.jce.provider.BouncyCastleProvider
+import org.bouncycastle.openssl.PEMParser
+import java.security.PublicKey
 import java.security.interfaces.RSAPublicKey
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.spec.RSAPrivateKeySpec
@@ -70,6 +78,66 @@ private fun createCipher(
 }
 
 /**
+ * 获取公钥
+ * @param keyStr String
+ * @return PublicKey
+ */
+@OptIn(ExperimentalEncodingApi::class)
+private fun getPublicKey(keyStr: String): PublicKey {
+    var publicKey: PublicKey
+    try {
+        val keyFactory = KeyFactory.getInstance("RSA")
+        publicKey = keyFactory.generatePublic(X509EncodedKeySpec(decode(keyStr)))
+        println("public key format PKCS8")
+    } catch (e: Exception) {
+        try {
+            val fullKey = "-----BEGIN RSA PUBLIC KEY-----\n${keyStr}\n-----END RSA PUBLIC KEY-----"
+            val pemParser = PEMParser(fullKey.reader())
+            val obj = pemParser.readObject() as SubjectPublicKeyInfo
+            val rsa = PublicKeyFactory.createKey(obj) as RSAKeyParameters
+            val rsaSpec = RSAPublicKeySpec(rsa.modulus, rsa.exponent)
+            val keyFactory = KeyFactory.getInstance("RSA", BouncyCastleProvider())
+            publicKey = keyFactory.generatePublic(rsaSpec)
+            println("public key format PKCS1")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("public key format error")
+        }
+    }
+    return publicKey
+}
+
+/**
+ * 获取私钥
+ * @param keyStr String
+ * @return PrivateKey
+ */
+@OptIn(ExperimentalEncodingApi::class)
+private fun getPrivateKey(keyStr: String): PrivateKey {
+    val pemContent = decode(keyStr)
+    var privateKey: PrivateKey
+    val keyFactory = KeyFactory.getInstance("RSA")
+    try {
+        privateKey = keyFactory.generatePrivate(PKCS8EncodedKeySpec(pemContent))
+        println("private key format PKCS8")
+    } catch (e: Exception) {
+        try {
+            val asn1PrivateKey = RSAPrivateKey.getInstance(pemContent)
+            val rsaPrivateKeySpec = RSAPrivateKeySpec(
+                asn1PrivateKey.modulus,
+                asn1PrivateKey.privateExponent
+            )
+            privateKey = keyFactory.generatePrivate(rsaPrivateKeySpec)
+            println("private key format PKCS1")
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("private key format error")
+        }
+    }
+    return privateKey
+}
+
+/**
  * # RSA公钥加密
  * > RSA加密解密算法支持三种填充模式，分别是NoPadding、OAEP、PKCS1Padding，RSA填充是为了和公钥等长。
  * - OAEP：最优非对称加密填充，英文为：Optimal Asymmetric Encryption Padding，是RSA加密和RSA解密最新最安全的推荐填充模式。当填充模式选择OAEP时，必须选择参数Hash和MGFHash。
@@ -93,7 +161,7 @@ actual fun rsaPublicEncrypt(
     mgfHashAlgorithm: MGFHashAlgorithm?
 ): String {
     val keyFactory = KeyFactory.getInstance("RSA")
-    val rsaPublicKey = keyFactory.generatePublic(X509EncodedKeySpec(decode(publicKey)))
+    val rsaPublicKey = getPublicKey(publicKey)
     val cipher = createCipher(rsaPublicKey, encryptMode, fillMode, hashAlgorithm, mgfHashAlgorithm, true)
     val blockSize = keyFactory.getBlockSize(rsaPublicKey, true, fillMode)
     return encode(cipher.doLongFinal(data.toByteArray(), blockSize))
@@ -123,7 +191,7 @@ actual fun rsaPrivateDecrypt(
     mgfHashAlgorithm: MGFHashAlgorithm?
 ): String {
     val keyFactory = KeyFactory.getInstance("RSA")
-    val rsaPrivateKey = keyFactory.generatePrivate(PKCS8EncodedKeySpec(decode(privateKey)))
+    val rsaPrivateKey = getPrivateKey(privateKey)
     val cipher = createCipher(rsaPrivateKey, encryptMode, fillMode, hashAlgorithm, mgfHashAlgorithm, false)
     val blockSize = keyFactory.getBlockSize(rsaPrivateKey, false, fillMode)
     return String(cipher.doLongFinal(decode(data), blockSize))
@@ -150,7 +218,7 @@ actual fun rsaPrivateEncrypt(
     mgfHashAlgorithm: MGFHashAlgorithm?
 ): String {
     val keyFactory = KeyFactory.getInstance("RSA")
-    val rsaPrivateKey = keyFactory.generatePrivate(PKCS8EncodedKeySpec(decode(privateKey)))
+    val rsaPrivateKey = getPrivateKey(privateKey)
     val cipher = createCipher(rsaPrivateKey, encryptMode, fillMode, hashAlgorithm, mgfHashAlgorithm, true)
     val blockSize = keyFactory.getBlockSize(rsaPrivateKey, true, fillMode)
     return encode(cipher.doLongFinal(data.toByteArray(), blockSize))
@@ -177,7 +245,7 @@ actual fun rsaPublicDecrypt(
     mgfHashAlgorithm: MGFHashAlgorithm?
 ): String {
     val keyFactory = KeyFactory.getInstance("RSA")
-    val rsaPublicKey = keyFactory.generatePublic(X509EncodedKeySpec(decode(publicKey)))
+    val rsaPublicKey = getPublicKey(publicKey)
     val cipher = createCipher(rsaPublicKey, encryptMode, fillMode, hashAlgorithm, mgfHashAlgorithm, false)
     val blockSize = keyFactory.getBlockSize(rsaPublicKey, false, fillMode)
     return String(cipher.doLongFinal(decode(data), blockSize))
