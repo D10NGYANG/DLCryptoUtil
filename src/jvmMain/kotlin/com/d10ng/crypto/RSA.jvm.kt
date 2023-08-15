@@ -1,5 +1,6 @@
 package com.d10ng.crypto
 
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo
 import java.security.Key
 import java.security.KeyFactory
 import java.security.KeyPairGenerator
@@ -32,17 +33,25 @@ actual fun generateRSAKeyPair(
     keyFormat: KeyFormat,
     keyLength: Int
 ): Pair<String, String> {
+    // 生成密钥对，JDK默认生成PKCS8格式
     val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
     keyPairGenerator.initialize(keyLength)
-
     val keyPair = keyPairGenerator.generateKeyPair()
 
     return when (keyFormat) {
-        KeyFormat.PKCS1 -> encode(keyPair.public.encoded) to encode(keyPair.private.encoded)
-        KeyFormat.PKCS8 -> {
-            val pkcs8PrivateKey = KeyFactory.getInstance("RSA")
-                .generatePrivate(PKCS8EncodedKeySpec(keyPair.private.encoded))
-            encode(keyPair.public.encoded) to encode(pkcs8PrivateKey.encoded)
+        KeyFormat.PKCS8 -> encode(keyPair.public.encoded) to encode(keyPair.private.encoded)
+        KeyFormat.PKCS1 -> {
+            // 通过BC工具转换格式
+            // 公钥转换
+            val spkInfo = SubjectPublicKeyInfo.getInstance(keyPair.public.encoded)
+            val primitive = spkInfo.parsePublicKey()
+            val publicKeyPKCS1 = primitive.getEncoded()
+            // 私钥转换
+            val pkInfo = PrivateKeyInfo.getInstance(keyPair.private.encoded)
+            val encode = pkInfo.parsePrivateKey()
+            val privateKeyPrimitive = encode.toASN1Primitive()
+            val privateKeyPKCS1 = privateKeyPrimitive.getEncoded()
+            encode(publicKeyPKCS1) to encode(privateKeyPKCS1)
         }
     }
 }
@@ -83,7 +92,7 @@ private fun createCipher(
  * @return PublicKey
  */
 @OptIn(ExperimentalEncodingApi::class)
-private fun getPublicKey(keyStr: String): PublicKey {
+fun getPublicKey(keyStr: String): PublicKey {
     var publicKey: PublicKey
     try {
         val keyFactory = KeyFactory.getInstance("RSA")
@@ -113,7 +122,7 @@ private fun getPublicKey(keyStr: String): PublicKey {
  * @return PrivateKey
  */
 @OptIn(ExperimentalEncodingApi::class)
-private fun getPrivateKey(keyStr: String): PrivateKey {
+fun getPrivateKey(keyStr: String): PrivateKey {
     val pemContent = decode(keyStr)
     var privateKey: PrivateKey
     val keyFactory = KeyFactory.getInstance("RSA")

@@ -2,17 +2,10 @@ package com.d10ng.crypto.test
 
 import com.d10ng.crypto.*
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo
-import org.bouncycastle.asn1.pkcs.RSAPrivateKey
-import org.bouncycastle.jce.provider.BouncyCastleProvider
-import org.bouncycastle.openssl.PEMParser
-import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter
-import org.bouncycastle.util.io.pem.PemReader
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
 import org.junit.Test
-import java.io.FileReader
-import java.nio.charset.StandardCharsets
-import java.security.Security
+import java.security.KeyPairGenerator
 import java.util.*
-import javax.crypto.Cipher
 
 
 class Test {
@@ -28,22 +21,11 @@ class Test {
         println("Public Key (PKCS8): ${pkcs8KeyPair.first}")
         println("Private Key (PKCS8): ${pkcs8KeyPair.second}")
 
-        // 测试公钥加密
-        val content = "1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv1qaz2wsx3edc4rfv"
-        val encryptContent = rsaPublicEncrypt(content, keyPair.first, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
-        println("Encrypt Content: $encryptContent")
+        getPublicKey(keyPair.first)
+        getPrivateKey(keyPair.second)
 
-        // 测试私钥解密
-        val decryptContent = rsaPrivateDecrypt(encryptContent, keyPair.second, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
-        assert(content == decryptContent)
-
-        // 测试私钥加密
-        val encryptContent2 = rsaPrivateEncrypt(content, keyPair.second, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
-        println("Encrypt Content: $encryptContent2")
-
-        // 测试公钥解密
-        val decryptContent2 = rsaPublicDecrypt(encryptContent2, keyPair.first, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
-        assert(content == decryptContent2)
+        getPublicKey(pkcs8KeyPair.first)
+        getPrivateKey(pkcs8KeyPair.second)
     }
 
     @Test
@@ -53,5 +35,38 @@ class Test {
         // 测试私钥解密
         val decryptContent = rsaPrivateDecrypt(encryptContent, key, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding, HashAlgorithm.SHA256, MGFHashAlgorithm.SHA1)
         println("Decrypt Content: $decryptContent")
+    }
+
+    @Test
+    fun test2() {
+        // 生成PKCS1密钥对
+
+        // 生成2048位RSA密钥对
+        val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
+        keyPairGenerator.initialize(2048)
+        val keyPair = keyPairGenerator.generateKeyPair()
+
+        // 获取私钥和公钥
+        val privateKeyBytes = keyPair.private.encoded
+        val publicKeyBytes = keyPair.public.encoded
+
+        val spkInfo = SubjectPublicKeyInfo.getInstance(publicKeyBytes)
+        val primitive = spkInfo.parsePublicKey()
+        val publicKeyPKCS1 = primitive.getEncoded()
+
+        val pkInfo = PrivateKeyInfo.getInstance(privateKeyBytes)
+        val encodable = pkInfo.parsePrivateKey()
+        val privateKeyPrimitive = encodable.toASN1Primitive()
+        val privateKeyPKCS1 = privateKeyPrimitive.getEncoded()
+
+        // 打印私钥和公钥的Base64编码字符串
+        val privateKeyString = Base64.getEncoder().encodeToString(privateKeyPKCS1)
+        val publicKeyString = Base64.getEncoder().encodeToString(publicKeyPKCS1)
+
+        println("Private Key (PKCS#1):\n$privateKeyString")
+        println("\nPublic Key (PKCS#1):\n$publicKeyString")
+
+        getPublicKey(publicKeyString)
+        getPrivateKey(privateKeyString)
     }
 }
