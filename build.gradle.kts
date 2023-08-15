@@ -33,14 +33,14 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation("org.bouncycastle:bcprov-jdk15on:1.70")
-                implementation("org.bouncycastle:bcpkix-jdk15on:1.70")
+                api("org.bouncycastle:bcprov-jdk15on:1.70")
+                api("org.bouncycastle:bcpkix-jdk15on:1.70")
             }
         }
         val jvmTest by getting
         val jsMain by getting {
             dependencies {
-                implementation(npm("node-forge", "1.3.1"))
+                api(npm("node-forge", "1.3.1"))
             }
         }
         val jsTest by getting
