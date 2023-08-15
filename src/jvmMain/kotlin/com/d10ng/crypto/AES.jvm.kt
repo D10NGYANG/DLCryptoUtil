@@ -22,7 +22,7 @@ actual fun aesEncryptDo(
     Security.addProvider(BouncyCastleProvider())
     val cipher = Cipher.getInstance("AES/${aesMode.name}/${fillMode.name}")
     val keySpec = SecretKeySpec(key.toByteArray(CHARSET), "AES")
-    cipher.init(Cipher.ENCRYPT_MODE, keySpec, IvParameterSpec(iv.toByteArray(CHARSET)))
+    cipher.init(Cipher.ENCRYPT_MODE, keySpec, if (aesMode == AESMode.ECB) null else IvParameterSpec(iv.toByteArray(CHARSET)))
     return encode(cipher.doFinal(content.toByteArray(CHARSET)))
 }
 
@@ -34,10 +34,11 @@ actual fun aesDecryptDo(
     key: String,
     iv: String
 ): String {
+    Security.addProvider(BouncyCastleProvider())
     val encrypted = decode(content.toByteArray(CHARSET))
     val cipher = Cipher.getInstance("AES/${aesMode.name}/${fillMode.name}")
     val keySpec = SecretKeySpec(key.toByteArray(CHARSET), "AES")
-    cipher.init(Cipher.DECRYPT_MODE, keySpec, IvParameterSpec(iv.toByteArray(CHARSET)))
+    cipher.init(Cipher.DECRYPT_MODE, keySpec, if (aesMode == AESMode.ECB) null else IvParameterSpec(iv.toByteArray(CHARSET)))
     val original = cipher.doFinal(encrypted)
     return String(original, CHARSET)
 }
