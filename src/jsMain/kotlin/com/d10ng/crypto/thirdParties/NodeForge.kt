@@ -25,6 +25,7 @@ external object NodeForge {
         fun privateKeyFromPem(pem: String): rsa.PrivateKey
         fun publicKeyFromAsn1(publicKey: asn1.Asn1): rsa.PublicKey
         fun privateKeyFromAsn1(privateKey: asn1.Asn1): rsa.PrivateKey
+        fun publicKeyToRSAPublicKeyPem(key: rsa.PublicKey): String
 
         object rsa {
             fun generateKeyPair(bits: Int): KeyPair

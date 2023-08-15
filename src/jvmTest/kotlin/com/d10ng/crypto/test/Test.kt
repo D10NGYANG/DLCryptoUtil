@@ -69,4 +69,10 @@ class Test {
         getPublicKey(publicKeyString)
         getPrivateKey(privateKeyString)
     }
+
+    @Test
+    fun test3() {
+        val key = "MIGJAoGBANAapBMEK3oveAJ01Mkky5tarFnErNFQ35tyesHslj8svArfHhiJAugrwYfQSuWtFjc/PzQfM6E2b9f3ThFWGjebnNMn5iKOduuluMDRtzIAKyumfXises8HfNhjJKVZ4/uyNEC4qGRZuZ6UM5imqJqI0TaCiQ52a9vBnW8uYfnvAgMBAAE="
+        getPublicKey(key)
+    }
 }

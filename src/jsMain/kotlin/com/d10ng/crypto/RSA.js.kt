@@ -20,6 +20,9 @@ actual fun generateRSAKeyPair(
         val privateKeyInfo = NodeForge.pki.wrapRsaPrivateKey(NodeForge.pki.privateKeyToAsn1(keyPair.privateKey))
         privateKey = NodeForge.pki.privateKeyInfoToPem(privateKeyInfo)
     }
+    if (keyFormat == KeyFormat.PKCS1) {
+        publicKey = NodeForge.pki.publicKeyToRSAPublicKeyPem(keyPair.publicKey)
+    }
     // 将key的换行符去除，并且删除头尾的公钥和私钥标识
     val delTagFunc: (String) -> String = { str ->
         str.replace(Regex("[\\r\\n]"), "").replace(Regex("(-+)(([^\\s-]*(\\s)){2,3}[^\\s-]*)(-+)"), "")
