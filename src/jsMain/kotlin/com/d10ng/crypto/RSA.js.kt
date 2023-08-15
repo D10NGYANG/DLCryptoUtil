@@ -136,50 +136,6 @@ actual fun rsaPrivateDecrypt(
 }
 
 /**
- * RSA私钥加密
- * > OAEP填充模式下不支持
- * @param data String 待加密数据
- * @param privateKey String 私钥
- * @param encryptMode RSAEncryptMode 加密模式，默认RSAEncryptMode.ECB
- * @param fillMode RSAFillMode 填充模式，默认RSAFillMode.PKCS1Padding
- * @param hashAlgorithm HashAlgorithm 哈希算法，默认null
- * @param mgfHashAlgorithm HashAlgorithm MGF哈希算法，默认null
- * @return String 加密后的数据
- */
-actual fun rsaPrivateEncrypt(
-    data: String,
-    privateKey: String,
-    encryptMode: RSAEncryptMode,
-    fillMode: RSAFillMode,
-    hashAlgorithm: HashAlgorithm?,
-    mgfHashAlgorithm: MGFHashAlgorithm?
-): String {
-    TODO("Not yet implemented")
-}
-
-/**
- * RSA公钥解密
- * > OAEP填充模式下不支持
- * @param data String 待解密数据
- * @param publicKey String 公钥
- * @param encryptMode RSAEncryptMode 加密模式，默认RSAEncryptMode.ECB
- * @param fillMode RSAFillMode 填充模式，默认RSAFillMode.PKCS1Padding
- * @param hashAlgorithm HashAlgorithm 哈希算法，默认null
- * @param mgfHashAlgorithm HashAlgorithm MGF哈希算法，默认null
- * @return String 解密后的数据
- */
-actual fun rsaPublicDecrypt(
-    data: String,
-    publicKey: String,
-    encryptMode: RSAEncryptMode,
-    fillMode: RSAFillMode,
-    hashAlgorithm: HashAlgorithm?,
-    mgfHashAlgorithm: MGFHashAlgorithm?
-): String {
-    TODO("Not yet implemented")
-}
-
-/**
  * 获取分包大小
  * @param key String
  * @param isPublicKey Boolean

@@ -218,7 +218,7 @@ actual fun rsaPrivateDecrypt(
  * @return String 加密后的数据
  */
 @OptIn(ExperimentalEncodingApi::class)
-actual fun rsaPrivateEncrypt(
+fun rsaPrivateEncrypt(
     data: String,
     privateKey: String,
     encryptMode: RSAEncryptMode,
@@ -245,7 +245,7 @@ actual fun rsaPrivateEncrypt(
  * @return String 解密后的数据
  */
 @OptIn(ExperimentalEncodingApi::class)
-actual fun rsaPublicDecrypt(
+fun rsaPublicDecrypt(
     data: String,
     publicKey: String,
     encryptMode: RSAEncryptMode,
