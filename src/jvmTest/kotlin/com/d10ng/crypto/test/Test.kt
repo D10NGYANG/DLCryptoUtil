@@ -3,9 +3,16 @@ package com.d10ng.crypto.test
 import com.d10ng.crypto.*
 import org.bouncycastle.asn1.pkcs.PrivateKeyInfo
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo
+import org.bouncycastle.jce.provider.BouncyCastleProvider
 import org.junit.Test
 import java.security.KeyPairGenerator
+import java.security.Security
 import java.util.*
+import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
+import kotlin.io.encoding.Base64.Default.encode
+import kotlin.io.encoding.ExperimentalEncodingApi
 
 
 class Test {
@@ -74,5 +81,18 @@ class Test {
     fun test3() {
         val key = "MIGJAoGBANAapBMEK3oveAJ01Mkky5tarFnErNFQ35tyesHslj8svArfHhiJAugrwYfQSuWtFjc/PzQfM6E2b9f3ThFWGjebnNMn5iKOduuluMDRtzIAKyumfXises8HfNhjJKVZ4/uyNEC4qGRZuZ6UM5imqJqI0TaCiQ52a9vBnW8uYfnvAgMBAAE="
         getPublicKey(key)
+    }
+
+    @OptIn(ExperimentalEncodingApi::class)
+    @Test
+    fun test4() {
+        Security.addProvider(BouncyCastleProvider())
+        val cipher = Cipher.getInstance("AES/CBC/PKCS7Padding")
+        val byteArray = "1234567812345678".toByteArray(Charsets.UTF_8)
+        val keySpec = SecretKeySpec(byteArray, "AES")
+        cipher.init(Cipher.ENCRYPT_MODE, keySpec, IvParameterSpec("8765432187654321".toByteArray(Charsets.UTF_8)))
+        val content = "1qaz2wsx"
+        val encrypted = cipher.doFinal(content.toByteArray(Charsets.UTF_8))
+        println("Encrypted: ${encode(encrypted)}")
     }
 }
