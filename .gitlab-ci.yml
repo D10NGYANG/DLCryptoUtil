@@ -18,6 +18,8 @@ sonarqube-check:
       paths:
         - ./gradle-cache/
   script:
+    # 写入环境配置文件
+    - cat $GRADLE_PROPERTIES > ./gradle-cache/gradle.properties
     # 执行脚本
     - sh ./gradlew -g ./gradle-cache sonar
   after_script:
