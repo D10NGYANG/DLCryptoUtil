@@ -1,0 +1,28 @@
+stages:
+  - sonarqube # 代码质量检查
+
+sonarqube-check:
+  stage: sonarqube
+  tags:
+    - sonarqube
+  variables:
+    DOCKER_AUTH_CONFIG: '{"auths":{"hub.bds100.com":{"auth":"ZGV2b3BzOmRldm9wc0A="}}}'  # 镜像来自私仓，需要配置账号；
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # 定义缓存位置
+    GIT_DEPTH: "0" # 表示有多少次改动才触发，0表示只要有更新就触发
+  image: hub.bds100.com/gradle:8-jdk11
+  cache:
+    - key: "${CI_JOB_NAME}"
+      paths:
+        - .sonar/cache
+    - key: gradle-cache
+      paths:
+        - ./gradle-cache/
+  script:
+    # 执行脚本
+    - sh ./gradlew -g ./gradle-cache sonar
+  after_script:
+    # 发送代码质量检查结果通知
+    - cat $NOTICE_SONAR_RESULT_SH > ./notice
+    - sh ./notice
+  only:
+    - dev

@@ -1,4 +1,5 @@
 plugins {
+    id("org.sonarqube") version "4.3.0.3225"
     kotlin("multiplatform") version "1.9.0"
     id("maven-publish")
     id("dev.petuska.npm.publish") version "3.4.1"
@@ -97,5 +98,12 @@ fun isNonStable(version: String): Boolean {
 tasks.withType<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask> {
     rejectVersionIf {
         isNonStable(candidate.version)
+    }
+}
+
+
+sonarqube {
+    properties {
+        property("sonar.sourceEncoding", "UTF-8")
     }
 }
