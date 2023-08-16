@@ -18,6 +18,8 @@ sonarqube-check:
       paths:
         - ./gradle-cache/
   script:
+    # 判断目录是否存在，不存在则创建
+    - mkdir -p ./gradle-cache/
     # 写入环境配置文件
     - cat $GRADLE_PROPERTIES > ./gradle-cache/gradle.properties
     # 执行脚本
