@@ -26,4 +26,24 @@ class AES_Test {
         }
     }
 
+    @Test
+    fun testECBPKCS7Padding() {
+        val content = "1qaz2wsx3edc4rfv"
+        val key = "1234567812345678"
+        val iv = "8765432187654321"
+        val encryptContent = aesEncrypt(content, AESMode.ECB, AESFillMode.PKCS7Padding, key, iv)
+        assertEquals(encryptContent, "o0miW7rTBY7Ta8cnp7FKONlqpCtZFRqem1kl/J2Vra8=")
+        assertEquals(aesDecrypt(encryptContent, AESMode.ECB, AESFillMode.PKCS7Padding, key, iv), content)
+    }
+
+    @Test
+    fun testCBCPKCS7Padding() {
+        val content = "1qaz2wsx3edc4rfv"
+        val key = "1234567812345678"
+        val iv = "8765432187654321"
+        val encryptContent = aesEncrypt(content, AESMode.CBC, AESFillMode.PKCS7Padding, key, iv)
+        assertEquals(encryptContent, "+ImXPxSFnJPw/rKkH/3dmezN6QDi+5TtL0YQJYLWOb4=")
+        assertEquals(aesDecrypt(encryptContent, AESMode.CBC, AESFillMode.PKCS7Padding, key, iv), content)
+    }
+
 }

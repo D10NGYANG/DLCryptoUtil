@@ -7,7 +7,7 @@ enum class AESMode {
 
 // 填充模式
 enum class AESFillMode {
-    NoPadding, PKCS5Padding, PKCS7Padding
+    PKCS7Padding
 }
 
 /**

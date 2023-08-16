@@ -47,6 +47,29 @@ external object NodeForge {
             }
         }
     }
+    object cipher {
+        fun createCipher(algorithm: String, payload: util.ByteBuffer): BlockCipher
+        fun createDecipher(algorithm: String, payload: util.ByteBuffer): BlockCipher
+
+        class BlockCipher {
+            fun start(options: StartOptions?)
+            fun update(payload: util.ByteBuffer)
+            fun finish(): Boolean
+            var output: util.ByteBuffer
+            var mode: Mode
+        }
+
+        interface StartOptions {
+            var iv: util.ByteBuffer?
+            var tag: String?
+            var tagLength: Int?
+            var additionalData: String?
+        }
+
+        class Mode {
+            var tag: util.ByteStringBuffer
+        }
+    }
     object md {
 
         object sha1 {
@@ -75,10 +98,16 @@ external object NodeForge {
         open class ByteStringBuffer {
             var data: String
             fun bytes(): String
+            fun getBytes(): String
         }
 
         fun createBuffer(): ByteBuffer
+        fun createBuffer(input: String): ByteBuffer
         fun encodeUtf8(str: String): String
         fun decodeUtf8(encoded: String): String
     }
+}
+
+fun StartOptions(): NodeForge.cipher.StartOptions {
+    return js("{}")
 }
