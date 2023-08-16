@@ -26,20 +26,20 @@ import kotlin.io.encoding.ExperimentalEncodingApi
  * 生成RSA密钥对
  * @param keyFormat KeyFormat 密钥格式，默认PKCS1
  * @param keyLength Int 密钥长度，默认2048位，可以根据需要调整，建议2048及以上
- * @return Pair<String, String> 公钥和私钥
+ * @return Array<String> 公钥和私钥
  */
 @OptIn(ExperimentalEncodingApi::class)
 actual fun generateRSAKeyPair(
     keyFormat: KeyFormat,
     keyLength: Int
-): Pair<String, String> {
+): Array<String> {
     // 生成密钥对，JDK默认生成PKCS8格式
     val keyPairGenerator = KeyPairGenerator.getInstance("RSA")
     keyPairGenerator.initialize(keyLength)
     val keyPair = keyPairGenerator.generateKeyPair()
 
     return when (keyFormat) {
-        KeyFormat.PKCS8 -> encode(keyPair.public.encoded) to encode(keyPair.private.encoded)
+        KeyFormat.PKCS8 -> arrayOf(encode(keyPair.public.encoded), encode(keyPair.private.encoded))
         KeyFormat.PKCS1 -> {
             // 通过BC工具转换格式
             // 公钥转换
@@ -51,7 +51,7 @@ actual fun generateRSAKeyPair(
             val encode = pkInfo.parsePrivateKey()
             val privateKeyPrimitive = encode.toASN1Primitive()
             val privateKeyPKCS1 = privateKeyPrimitive.getEncoded()
-            encode(publicKeyPKCS1) to encode(privateKeyPKCS1)
+            arrayOf(encode(publicKeyPKCS1), encode(privateKeyPKCS1))
         }
     }
 }

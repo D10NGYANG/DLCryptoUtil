@@ -21,18 +21,18 @@ class Test {
     fun test() {
         // 生成密钥对
         val keyPair = generateRSAKeyPair(KeyFormat.PKCS1)
-        println("Public Key: ${keyPair.first}")
-        println("Private Key: ${keyPair.second}")
+        println("Public Key: ${keyPair[0]}")
+        println("Private Key: ${keyPair[1]}")
 
         val pkcs8KeyPair = generateRSAKeyPair(KeyFormat.PKCS8)
-        println("Public Key (PKCS8): ${pkcs8KeyPair.first}")
-        println("Private Key (PKCS8): ${pkcs8KeyPair.second}")
+        println("Public Key (PKCS8): ${pkcs8KeyPair[0]}")
+        println("Private Key (PKCS8): ${pkcs8KeyPair[1]}")
 
-        getPublicKey(keyPair.first)
-        getPrivateKey(keyPair.second)
+        getPublicKey(keyPair[0])
+        getPrivateKey(keyPair[1])
 
-        getPublicKey(pkcs8KeyPair.first)
-        getPrivateKey(pkcs8KeyPair.second)
+        getPublicKey(pkcs8KeyPair[0])
+        getPrivateKey(pkcs8KeyPair[1])
     }
 
     @Test

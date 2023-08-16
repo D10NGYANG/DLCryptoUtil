@@ -1,24 +1,29 @@
 package com.d10ng.crypto
 
-import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlin.js.JsExport
 
 // 密钥格式
+@JsExport
 enum class KeyFormat {
     PKCS1, PKCS8
 }
 // 填充模式
+@JsExport
 enum class RSAFillMode {
     NoPadding, OAEP, PKCS1Padding
 }
 // 加密模式
+@JsExport
 enum class RSAEncryptMode {
     NONE, ECB
 }
 // 哈希算法
+@JsExport
 enum class HashAlgorithm(val text: String) {
     SHA1("SHA-1"), SHA256("SHA-256")
 }
 // MGF哈希算法
+@JsExport
 enum class MGFHashAlgorithm(val text: String) {
     SHA1("MGF1")
 }
@@ -27,9 +32,9 @@ enum class MGFHashAlgorithm(val text: String) {
  * 生成RSA密钥对
  * @param keyFormat KeyFormat 密钥格式，默认PKCS1
  * @param keyLength Int 密钥长度，默认2048位，可以根据需要调整，建议2048及以上
- * @return Pair<String, String> 公钥和私钥
+ * @return Array<String> 公钥和私钥
  */
-expect fun generateRSAKeyPair(keyFormat: KeyFormat = KeyFormat.PKCS1, keyLength: Int = 2048): Pair<String, String>
+expect fun generateRSAKeyPair(keyFormat: KeyFormat = KeyFormat.PKCS1, keyLength: Int = 2048): Array<String>
 
 
 /**

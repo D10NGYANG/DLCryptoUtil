@@ -29,78 +29,34 @@ class RSA_Test {
 
     }
 
-    @Test
-    fun test() {
-        // 生成密钥对
-        val keyPair = generateRSAKeyPair(KeyFormat.PKCS1, 1024)
-        println("Public Key: \n${keyPair.first}")
-        println("Private Key: \n${keyPair.second}")
-
-        val pkcs8KeyPair = generateRSAKeyPair(KeyFormat.PKCS8, 1024)
-        println("Public Key (PKCS8): \n${pkcs8KeyPair.first}")
-        println("Private Key (PKCS8): \n${pkcs8KeyPair.second}")
-
-        // 测试公钥加密
-        val content =
-            "中文消息133"
-        val encryptContent = rsaPublicEncrypt(
-            content,
-            keyPair.first,
-            RSAEncryptMode.ECB,
-            RSAFillMode.OAEP,
-            HashAlgorithm.SHA256,
-            MGFHashAlgorithm.SHA1
-        )
-        println("Encrypt Content: $encryptContent")
-
-        // 测试私钥解密
-        val decryptContent = rsaPrivateDecrypt(
-            encryptContent,
-            keyPair.second,
-            RSAEncryptMode.ECB,
-            RSAFillMode.OAEP,
-            HashAlgorithm.SHA256,
-            MGFHashAlgorithm.SHA1
-        )
-        assertEquals(content, decryptContent)
-//
-//        // 测试私钥加密
-//        val encryptContent2 = rsaPrivateEncrypt(content, pkcs8KeyPair.second, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
-//        println("Encrypt Content: $encryptContent2")
-//
-//        // 测试公钥解密
-//        val decryptContent2 = rsaPublicDecrypt(encryptContent2, pkcs8KeyPair.first, RSAEncryptMode.ECB, RSAFillMode.PKCS1Padding)
-//        assertEquals(content, decryptContent2)
-    }
-
     /**
      * 测试生成密钥对
      */
     @Test
     fun testGenerateRSAKeyPair() {
         val keyPair1024 = generateRSAKeyPair(KeyFormat.PKCS1, 1024)
-        println("Public Key  1024: \n${keyPair1024.first}")
-        println("Private Key 1024: \n${keyPair1024.second}")
-        assertTrue(keyPair1024.first.isNotEmpty())
-        assertTrue(keyPair1024.second.isNotEmpty())
+        println("Public Key  1024: \n${keyPair1024[0]}")
+        println("Private Key 1024: \n${keyPair1024[1]}")
+        assertTrue(keyPair1024[0].isNotEmpty())
+        assertTrue(keyPair1024[1].isNotEmpty())
 
         val pkcs8KeyPair1024 = generateRSAKeyPair(KeyFormat.PKCS8, 1024)
-        println("Public Key (PKCS8)  1024: \n${pkcs8KeyPair1024.first}")
-        println("Private Key (PKCS8) 1024: \n${pkcs8KeyPair1024.second}")
-        assertTrue(pkcs8KeyPair1024.first.isNotEmpty())
-        assertTrue(pkcs8KeyPair1024.second.isNotEmpty())
+        println("Public Key (PKCS8)  1024: \n${pkcs8KeyPair1024[0]}")
+        println("Private Key (PKCS8) 1024: \n${pkcs8KeyPair1024[1]}")
+        assertTrue(pkcs8KeyPair1024[0].isNotEmpty())
+        assertTrue(pkcs8KeyPair1024[1].isNotEmpty())
 
         val keyPair2048 = generateRSAKeyPair(KeyFormat.PKCS1, 2048)
-        println("Public Key  2048: \n${keyPair2048.first}")
-        println("Private Key 2048: \n${keyPair2048.second}")
-        assertTrue(keyPair2048.first.isNotEmpty())
-        assertTrue(keyPair2048.second.isNotEmpty())
+        println("Public Key  2048: \n${keyPair2048[0]}")
+        println("Private Key 2048: \n${keyPair2048[1]}")
+        assertTrue(keyPair2048[0].isNotEmpty())
+        assertTrue(keyPair2048[1].isNotEmpty())
 
         val pkcs8KeyPair2048 = generateRSAKeyPair(KeyFormat.PKCS8, 2048)
-        println("Public Key (PKCS8)  2048: \n${pkcs8KeyPair2048.first}")
-        println("Private Key (PKCS8) 2048: \n${pkcs8KeyPair2048.second}")
-        assertTrue(pkcs8KeyPair2048.first.isNotEmpty())
-        assertTrue(pkcs8KeyPair2048.second.isNotEmpty())
+        println("Public Key (PKCS8)  2048: \n${pkcs8KeyPair2048[0]}")
+        println("Private Key (PKCS8) 2048: \n${pkcs8KeyPair2048[1]}")
+        assertTrue(pkcs8KeyPair2048[0].isNotEmpty())
+        assertTrue(pkcs8KeyPair2048[1].isNotEmpty())
     }
 
     /**

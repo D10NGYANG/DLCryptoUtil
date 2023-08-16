@@ -1,11 +1,15 @@
 package com.d10ng.crypto
 
+import kotlin.js.JsExport
+
 // 工作模式
+@JsExport
 enum class AESMode {
     ECB, CBC
 }
 
 // 填充模式
+@JsExport
 enum class AESFillMode {
     PKCS7Padding
 }
@@ -21,7 +25,7 @@ enum class AESFillMode {
  * @param key String
  * @return String
  */
-fun checkAndFillKey(key: String): String {
+private fun checkAndFillKey(key: String): String {
     if (key.isEmpty()) {
         throw IllegalArgumentException("密钥不能为空")
     }
@@ -49,7 +53,7 @@ fun checkAndFillKey(key: String): String {
  * @param key String
  * @return String
  */
-fun checkAndFillIv(iv: String?, key: String): String {
+private fun checkAndFillIv(iv: String?, key: String): String {
     if (iv.isNullOrEmpty()) {
         return key.substring(0, 16)
     }
@@ -62,6 +66,7 @@ fun checkAndFillIv(iv: String?, key: String): String {
     return iv
 }
 
+@JsExport
 /**
  * AES加密
  * @param content String 待加密内容
@@ -83,7 +88,7 @@ fun aesEncrypt(
     return aesEncryptDo(content, aesMode, fillMode, keyStr, ivStr)
 }
 
-expect fun aesEncryptDo(
+internal expect fun aesEncryptDo(
     content: String,
     aesMode: AESMode = AESMode.CBC,
     fillMode: AESFillMode = AESFillMode.PKCS7Padding,
@@ -91,6 +96,7 @@ expect fun aesEncryptDo(
     iv: String
 ): String
 
+@JsExport
 /**
  * AES解密
  * @param content String 待解密内容
@@ -112,7 +118,7 @@ fun aesDecrypt(
     return aesDecryptDo(content, aesMode, fillMode, keyStr, ivStr)
 }
 
-expect fun aesDecryptDo(
+internal expect fun aesDecryptDo(
     content: String,
     aesMode: AESMode = AESMode.CBC,
     fillMode: AESFillMode = AESFillMode.PKCS7Padding,

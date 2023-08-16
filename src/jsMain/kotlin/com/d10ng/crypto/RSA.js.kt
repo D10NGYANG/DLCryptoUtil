@@ -6,12 +6,13 @@ import com.d10ng.crypto.thirdParties.NodeForge
  * 生成RSA密钥对
  * @param keyFormat KeyFormat 密钥格式，默认PKCS1
  * @param keyLength Int 密钥长度，默认2048位，可以根据需要调整，建议2048及以上
- * @return Pair<String, String> 公钥和私钥
+ * @return Array<String> 公钥和私钥
  */
+@JsExport
 actual fun generateRSAKeyPair(
     keyFormat: KeyFormat,
     keyLength: Int
-): Pair<String, String> {
+): Array<String> {
     val rsa = NodeForge.pki.rsa
     val keyPair = rsa.generateKeyPair(keyLength)
     var publicKey = NodeForge.pki.publicKeyToPem(keyPair.publicKey)
@@ -29,7 +30,7 @@ actual fun generateRSAKeyPair(
     }
     publicKey = delTagFunc(publicKey)
     privateKey = delTagFunc(privateKey)
-    return publicKey to privateKey
+    return arrayOf(publicKey, privateKey)
 }
 
 /**
@@ -46,6 +47,7 @@ actual fun generateRSAKeyPair(
  * @param mgfHashAlgorithm HashAlgorithm MGF哈希算法，默认null
  * @return String 加密后的数据
  */
+@JsExport
 actual fun rsaPublicEncrypt(
     data: String,
     publicKey: String,
@@ -99,6 +101,7 @@ actual fun rsaPublicEncrypt(
  * @param mgfHashAlgorithm HashAlgorithm MGF哈希算法，默认null
  * @return String 解密后的数据
  */
+@JsExport
 actual fun rsaPrivateDecrypt(
     data: String,
     privateKey: String,
