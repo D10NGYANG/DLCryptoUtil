@@ -23,3 +23,6 @@
 > `PKCS5Padding`在当前场景下和`PKCS7Padding`是等价的，因此不再支持。
 > 
 > `NoPadding`由于限制输入数据必须是`blockSize`的整数倍，使用起来比较麻烦，不考虑支持。
+
+## 安装与使用
+> 参考`wiki`文档；
