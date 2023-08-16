@@ -66,7 +66,7 @@ private fun checkAndFillIv(iv: String?, key: String): String {
     return iv
 }
 
-@JsExport
+
 /**
  * AES加密
  * @param content String 待加密内容
@@ -76,6 +76,7 @@ private fun checkAndFillIv(iv: String?, key: String): String {
  * @param iv String? 向量，只支持字母与数字，最大长度为16位，如果为null或者空则使用密钥并截取前16位
  * @return String
  */
+@JsExport
 fun aesEncrypt(
     content: String,
     aesMode: AESMode = AESMode.CBC,
@@ -96,7 +97,7 @@ internal expect fun aesEncryptDo(
     iv: String
 ): String
 
-@JsExport
+
 /**
  * AES解密
  * @param content String 待解密内容
@@ -106,6 +107,7 @@ internal expect fun aesEncryptDo(
  * @param iv String? 向量，只支持字母与数字，最大长度为16位，如果为null或者空则使用密钥并截取前16位
  * @return String
  */
+@JsExport
 fun aesDecrypt(
     content: String,
     aesMode: AESMode = AESMode.CBC,
