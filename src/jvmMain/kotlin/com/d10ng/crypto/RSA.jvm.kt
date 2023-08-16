@@ -78,12 +78,25 @@ private fun createCipher(
     val baseStr = buildString {
         append("RSA/${encryptMode.name}/${fillMode.name}")
         if (fillMode == RSAFillMode.OAEP) {
-            append("With${hashAlgorithm?.text?: ""}And${mgfHashAlgorithm?.text?: ""}Padding")
+            append("With${hashAlgorithm?.getText()?: ""}And${mgfHashAlgorithm?.getText()?: ""}Padding")
         }
     }
     val cipher = Cipher.getInstance(baseStr)
     cipher.init(if (isEncrypt) Cipher.ENCRYPT_MODE else Cipher.DECRYPT_MODE, rsaKey)
     return cipher
+}
+
+private fun HashAlgorithm.getText(): String {
+    return when (this) {
+        HashAlgorithm.SHA1 -> "SHA-1"
+        HashAlgorithm.SHA256 -> "SHA-256"
+    }
+}
+
+private fun MGFHashAlgorithm.getText(): String {
+    return when (this) {
+        MGFHashAlgorithm.SHA1 -> "MGF1"
+    }
 }
 
 /**

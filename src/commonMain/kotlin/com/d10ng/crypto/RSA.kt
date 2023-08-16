@@ -19,13 +19,13 @@ enum class RSAEncryptMode {
 }
 // 哈希算法
 @JsExport
-enum class HashAlgorithm(val text: String) {
-    SHA1("SHA-1"), SHA256("SHA-256")
+enum class HashAlgorithm {
+    SHA1, SHA256
 }
 // MGF哈希算法
 @JsExport
-enum class MGFHashAlgorithm(val text: String) {
-    SHA1("MGF1")
+enum class MGFHashAlgorithm {
+    SHA1
 }
 
 /**

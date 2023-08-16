@@ -103,9 +103,9 @@ class RSA_Test {
             println("key: ${key.name}")
             contentList.forEach { content ->
                 println("content: $content")
-                HashAlgorithm.entries.forEach { hash ->
+                HashAlgorithm.values().forEach { hash ->
                     println("hash: ${hash.name}")
-                    MGFHashAlgorithm.entries.forEach { mgfHash ->
+                    MGFHashAlgorithm.values().forEach { mgfHash ->
                         println("mgfHash: ${mgfHash.name}")
                         val encryptContent = rsaPublicEncrypt(
                             content,
