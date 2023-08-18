@@ -40,4 +40,12 @@ public class JavaDemo {
         // 解密 AES/ECB/PKCS7Padding
         String decrypted2 = AESKt.aesDecrypt(encrypted2, AESMode.ECB, AESFillMode.PKCS7Padding, key, iv);
     }
+
+    public static void base64Demo() {
+        String content = "Hello World!";
+        // Base64 编码
+        String encoded = Base64Kt.encodeBase64(content);
+        // Base64 解码
+        String decoded = Base64Kt.decodeBase64(encoded);
+    }
 }
