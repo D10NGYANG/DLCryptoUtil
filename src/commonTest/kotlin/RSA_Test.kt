@@ -67,6 +67,8 @@ class RSA_Test {
         val contentList = listOf(
             // 短文本
             "1qaz2wsx",
+            // 中文本
+            "1qaz2wsx3edc4rfv5tgb",
             // 长文本
             (0..30).joinToString("") { "1qaz2wsx3EDC4RFV" },
             // 带汉字的文本
@@ -87,6 +89,7 @@ class RSA_Test {
                     RSAEncryptMode.ECB,
                     RSAFillMode.PKCS1Padding
                 )
+                println("encryptContent: $encryptContent")
                 val decryptContent = rsaPrivateDecrypt(
                     encryptContent,
                     key.privateKey,
@@ -94,6 +97,7 @@ class RSA_Test {
                     RSAFillMode.PKCS1Padding
                 )
                 assertEquals(content, decryptContent)
+                println()
             }
         }
 
@@ -115,6 +119,7 @@ class RSA_Test {
                             hash,
                             mgfHash
                         )
+                        println("encryptContent: $encryptContent")
                         val decryptContent = rsaPrivateDecrypt(
                             encryptContent,
                             key.privateKey,
@@ -124,6 +129,7 @@ class RSA_Test {
                             mgfHash
                         )
                         assertEquals(content, decryptContent)
+                        println()
                     }
                 }
             }

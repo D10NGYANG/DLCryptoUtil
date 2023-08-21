@@ -110,7 +110,7 @@ fun getPublicKey(keyStr: String): PublicKey {
     try {
         val keyFactory = KeyFactory.getInstance("RSA")
         publicKey = keyFactory.generatePublic(X509EncodedKeySpec(decode(keyStr)))
-        println("public key format PKCS8")
+        //println("public key format PKCS8")
     } catch (e: Exception) {
         try {
             val fullKey = "-----BEGIN RSA PUBLIC KEY-----\n${keyStr}\n-----END RSA PUBLIC KEY-----"
@@ -120,7 +120,7 @@ fun getPublicKey(keyStr: String): PublicKey {
             val rsaSpec = RSAPublicKeySpec(rsa.modulus, rsa.exponent)
             val keyFactory = KeyFactory.getInstance("RSA", BouncyCastleProvider())
             publicKey = keyFactory.generatePublic(rsaSpec)
-            println("public key format PKCS1")
+            //println("public key format PKCS1")
         } catch (e: Exception) {
             e.printStackTrace()
             throw RuntimeException("public key format error")
@@ -141,7 +141,7 @@ fun getPrivateKey(keyStr: String): PrivateKey {
     val keyFactory = KeyFactory.getInstance("RSA")
     try {
         privateKey = keyFactory.generatePrivate(PKCS8EncodedKeySpec(pemContent))
-        println("private key format PKCS8")
+        //println("private key format PKCS8")
     } catch (e: Exception) {
         try {
             val asn1PrivateKey = RSAPrivateKey.getInstance(pemContent)
@@ -150,7 +150,7 @@ fun getPrivateKey(keyStr: String): PrivateKey {
                 asn1PrivateKey.privateExponent
             )
             privateKey = keyFactory.generatePrivate(rsaPrivateKeySpec)
-            println("private key format PKCS1")
+            //println("private key format PKCS1")
         } catch (e: Exception) {
             e.printStackTrace()
             throw RuntimeException("private key format error")
