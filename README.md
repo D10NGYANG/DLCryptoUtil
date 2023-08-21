@@ -35,3 +35,8 @@
 
 ## 安装与使用
 > 参考`wiki`文档；
+
+## 性能测试
+选择`RSA/ECB/OAEPWithSHA-256AndMGF1Padding`进行1000并发私钥解密测试，测试结果如下：
+- `M1 Pro`: 0.25秒；
+- `阿里云 ecs.c7.4xlarge`: 约6秒；
