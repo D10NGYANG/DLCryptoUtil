@@ -1,7 +1,7 @@
 # DLCryptoUtil
 基于`Kotlin Multiplatform`的加密工具库，目前支持`Android`、`JVM`、`JS`平台。
 
-*当前最新版本`0.0.7`*
+*当前最新版本`0.0.8`*
 
 ## 特性说明
 

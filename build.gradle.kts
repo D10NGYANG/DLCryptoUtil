@@ -1,13 +1,13 @@
 plugins {
     id("org.sonarqube") version "4.4.1.3373"
-    kotlin("multiplatform") version "1.9.20"
+    kotlin("multiplatform") version "1.9.21"
     id("maven-publish")
     id("dev.petuska.npm.publish") version "3.4.1"
-    id("com.github.ben-manes.versions") version "0.49.0"
+    id("com.github.ben-manes.versions") version "0.50.0"
 }
 
 group = "com.github.D10NGYANG"
-version = "0.0.7"
+version = "0.0.8"
 
 repositories {
     mavenCentral()
