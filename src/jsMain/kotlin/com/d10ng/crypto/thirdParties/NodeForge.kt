@@ -84,6 +84,13 @@ external object NodeForge {
             class MessageDigest: md.MessageDigest {}
             fun create(): MessageDigest
         }
+        object md5 {
+            class MessageDigest: md.MessageDigest {
+                fun update(data: String)
+                fun digest(): util.ByteBuffer
+            }
+            fun create(): MessageDigest
+        }
         open class MessageDigest {
             var algorithm: String
         }
@@ -99,6 +106,7 @@ external object NodeForge {
             var data: String
             fun bytes(): String
             fun getBytes(): String
+            fun toHex(): String
         }
 
         fun createBuffer(): ByteBuffer

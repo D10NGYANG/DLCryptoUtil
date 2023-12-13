@@ -1,13 +1,14 @@
 # DLCryptoUtil
 基于`Kotlin Multiplatform`的加密工具库，目前支持`Android`、`JVM`、`JS`平台。
 
-*当前最新版本`0.0.8`*
+*当前最新版本`0.0.9`*
 
 ## 特性说明
 
  - [RSA](#RSA)
  - [AES](#AES)
  - [Base64](#Base64)
+ - [MD5](#MD5)
 
 
 ### RSA
@@ -32,6 +33,9 @@
 
 ### Base64
 1、支持`Base64`编码、解码；
+
+### MD5
+1、支持`MD5`加密；
 
 ## 安装与使用
 > 参考`wiki`文档；
