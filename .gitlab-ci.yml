@@ -23,7 +23,7 @@ sonarqube-check:
     # 写入环境配置文件
     - cat $GRADLE_PROPERTIES > ./gradle-cache/gradle.properties
     # 执行脚本
-    - sh ./gradlew -g ./gradle-cache sonar
+    - sh ./gradlew -g ./gradle-cache sonar -Dsonar.projectKey=$SONAR_KEY -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.branch.name=dev
   after_script:
     # 发送代码质量检查结果通知
     - cat $NOTICE_SONAR_RESULT_SH > ./notice
