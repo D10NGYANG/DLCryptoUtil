@@ -1,7 +1,9 @@
 # DLCryptoUtil
-基于`Kotlin Multiplatform`的加密工具库，目前支持`Android`、`JVM`、`JS`平台。
+基于`Kotlin Multiplatform`的加密工具库，目前支持`Android`、`JVM`、`JS`、`iOS`平台。
 
-*当前最新版本`0.1.1`*
+> `iOS`当前仅支持`AES`、`Base64`、`MD5`，后续会支持`RSA`。
+
+*当前最新版本：* **`0.2.0`**
 
 ## 特性说明
 
