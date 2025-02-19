@@ -1,9 +1,9 @@
 plugins {
-    id("org.sonarqube") version "5.0.0.4638"
-    kotlin("multiplatform") version "1.9.23"
+    id("org.sonarqube") version "6.0.1.5171"
+    kotlin("multiplatform") version "2.1.10"
     id("maven-publish")
-    id("dev.petuska.npm.publish") version "3.4.2"
-    id("com.github.ben-manes.versions") version "0.51.0"
+    id("dev.petuska.npm.publish") version "3.5.2"
+    id("com.github.ben-manes.versions") version "0.52.0"
 }
 
 group = "com.github.D10NGYANG"
@@ -14,8 +14,8 @@ repositories {
 }
 
 kotlin {
+    jvmToolchain(8)
     jvm {
-        jvmToolchain(8)
         withJava()
     }
     js(IR) {
@@ -108,9 +108,4 @@ sonarqube {
     properties {
         property("sonar.sourceEncoding", "UTF-8")
     }
-}
-
-// TODO 修复gradle 8.0以后出现任务依赖不声明导致的问题，待后续修复了再移除
-tasks.named("jsNodeProductionLibraryPrepare") {
-    dependsOn("jsProductionExecutableCompileSync")
 }

@@ -33,3 +33,5 @@ bin/
 .DS_Store
 
 kotlin-js-store
+
+.kotlin
