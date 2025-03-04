@@ -1,16 +1,23 @@
 # DLCryptoUtil
-基于`Kotlin Multiplatform`的加密工具库，目前支持`Android`、`JVM`、`JS`、`iOS`平台。
 
-> `iOS`当前仅支持`AES`、`Base64`、`MD5`，后续会支持`RSA`。
+基于`Kotlin Multiplatform`的加密工具库，目前支持`Android`、`JVM`、`JS`、`iOS`平台
 
-*当前最新版本：* **`0.2.0`**
+[![Kotlin](https://img.shields.io/badge/Kotlin-Multiplatform-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org/docs/multiplatform.html)
+[![Build Status](https://img.shields.io/github/workflow/status/D10NGYANG/DLCryptoUtil/Build/main?style=for-the-badge)](https://github.com/D10NGYANG/DLCryptoUtil)
+
+![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)
+![JVM](https://img.shields.io/badge/JVM-007396?style=for-the-badge&logo=java&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![iOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white)
+
+[![Version](https://img.shields.io/badge/Version-0.2.1-blue?style=for-the-badge)](https://github.com/D10NGYANG/DLCryptoUtil/releases)
 
 ## 特性说明
 
- - [RSA](#RSA)
- - [AES](#AES)
- - [Base64](#Base64)
- - [MD5](#MD5)
+ - 🔐 [RSA](#RSA)
+ - 🔒 [AES](#AES)
+ - 📝 [Base64](#Base64)
+ - 🔑 [MD5](#MD5)
 
 
 ### RSA
@@ -23,6 +30,8 @@
 - `RSA/ECB/PKCS1Padding`
 - `RSA/ECB/OAEPWithSHA-1AndMGF1Padding`
 - `RSA/ECB/OAEPWithSHA-256AndMGF1Padding`
+
+> `iOS`端原生不支持`PKCS#8`格式的私钥，需要使用`PKCS#1`格式的私钥进行解密。
 
 ### AES
 1、支持加密解密格式如下：
