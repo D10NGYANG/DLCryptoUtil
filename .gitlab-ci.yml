@@ -1,5 +1,15 @@
+# 每个作业共享配置
+default:
+  interruptible: true # 如果在作业完成之前启动较新的管道时应取消作业
+
+# 导入外部配置文件
+include:
+  - project: 'public-library/BaseCICD'
+    file: 'ci-notify.yml'
+
 stages:
   - sonarqube # 代码质量检查
+  - notify    # 通知
 
 sonarqube-check:
   stage: sonarqube
@@ -24,9 +34,5 @@ sonarqube-check:
     - cat $GRADLE_PROPERTIES > ./gradle-cache/gradle.properties
     # 执行脚本
     - sh ./gradlew -g ./gradle-cache sonar -Dsonar.projectKey=$SONAR_KEY -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN -Dsonar.branch.name=dev
-  after_script:
-    # 发送代码质量检查结果通知
-    - cat $NOTICE_SONAR_RESULT_SH > ./notice
-    - sh ./notice
   only:
     - dev
