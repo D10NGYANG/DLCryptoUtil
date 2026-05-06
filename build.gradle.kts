@@ -1,8 +1,8 @@
 plugins {
-    id("org.sonarqube") version "6.0.1.5171"
+    id("org.sonarqube") version "7.2.3.7755"
     kotlin("multiplatform") version "2.1.10"
     id("maven-publish")
-    id("dev.petuska.npm.publish") version "3.5.2"
+    id("dev.petuska.npm.publish") version "3.5.3"
     id("com.github.ben-manes.versions") version "0.52.0"
 }
 
@@ -10,6 +10,13 @@ group = "com.github.D10NGYANG"
 version = "0.2.1"
 
 repositories {
+    google {
+        mavenContent {
+            includeGroupAndSubgroups("androidx")
+            includeGroupAndSubgroups("com.android")
+            includeGroupAndSubgroups("com.google")
+        }
+    }
     mavenCentral()
 }
 
